@@ -1,4 +1,4 @@
-# AGAI — Automated Grape Anomaly Identification
+# AGAI — Leaf Symptom Classification
 
 A two-stage deep learning pipeline for single-leaf classification across five agronomic anomaly categories: **necrosis**, **chlorosis**, **residue**, **dirt**, and **water**.
 
