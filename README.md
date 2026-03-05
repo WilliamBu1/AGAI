@@ -1,4 +1,4 @@
-# AGAI — Leaf Symptom Classification
+# AGAI — Vision Transformer Strategies for Differentiating Phytotoxicity
 
 A two-stage deep learning pipeline for single-leaf classification across five agronomic anomaly categories: **necrosis**, **chlorosis**, **residue**, **dirt**, and **water**.
 
