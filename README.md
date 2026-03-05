@@ -1,21 +1,81 @@
-# AGAI
+# AGAI — Automated Grape Anomaly Identification
 
-This research project aims at single classifying a leaf between 5 classes: necrosis, chlorosis, residue, dirt, and water. The system comprises of rf-detr, an object detection model, used for identifying the most "prominent" leaf in a picture that may consist of multiple leaves. Analyzing a singular leaf is a much more simple task that improves classification accuracy. After rf-detr, the image is then cropped by the bounding box produced by rf-detr and then some padding(100px). This image is then resized into a 256x256 px image and passed onto the FastViT+MLP classifier.
+A two-stage deep learning pipeline for single-leaf classification across five agronomic anomaly categories: **necrosis**, **chlorosis**, **residue**, **dirt**, and **water**.
 
-Data Collection & Training:
+---
 
-This research used 4200 images total across the 5 classes for training, validation, and testing. The model weights provided for the classifier is the weights that were finalized from a 70/15/15 data split trial. This means 420 images per class, and in each class 294 images were used for training, 63 images were used for validation, and 63 images were used for testing. These model weights achieved a 99% accuracy in testing.
+## Overview
 
+Accurately classifying leaf conditions in field images is challenging due to scene complexity — images often contain multiple overlapping leaves, variable lighting, and cluttered backgrounds. AGAI addresses this with a two-stage architecture:
 
-Final_Traning_FastViT.ipynb is the notebook with the training for the FastViT + MLP classifier only. It is trained on preprocessed data of images that have ALREADY BEEN CROPPED by rf-detr. See the rf-detr.ipynb notebook to see the training used for rf-detr. Below is an example of how rf-detr modifies each image. 
+1. **Detection** — [RF-DETR](https://github.com/roboflow/rf-detr) localizes and isolates the most prominent leaf in each image via bounding box prediction.
+2. **Classification** — The cropped leaf region is passed to a **FastViT + MLP** classifier, which predicts one of five anomaly classes.
 
+This decomposition simplifies the classification task significantly, isolating the region of interest before inference and improving overall accuracy.
+
+---
+
+## Pipeline
+
+### Stage 1 — Leaf Detection (RF-DETR)
+
+RF-DETR identifies the most prominent leaf in each input image and outputs a bounding box. The image is then cropped using that bounding box with an additional **100px padding**, and resized to **256×256 pixels** before being passed to the classifier.
 
 <p align="center">
-<img src="data-preprocessing.png" alt="Examples" width="70%">
+  <img src="data-preprocessing.png" alt="RF-DETR preprocessing example" width="70%">
 </p>
 
-After this, more image preprocessing occurs, these images get resized to 256x256 images. All 4200 images were preprocessed like this and then finally trained on with the FastViT+MLP classifier. Examples of the classification is below.
+### Stage 2 — Anomaly Classification (FastViT + MLP)
+
+The preprocessed 256×256 crop is fed into a FastViT backbone with an MLP classification head, which predicts the leaf's anomaly class.
 
 <p align="center">
-<img src="example_classification.png" alt="Examples" width="70%">
+  <img src="example_classification.png" alt="Classification examples" width="70%">
 </p>
+
+---
+
+## Dataset & Training
+
+> **Data access:** The dataset used in this research is not publicly available. Please contact the author directly to request access.
+
+### Statistics
+
+| Split | Images per Class | Total Images |
+|---|---|---|
+| Training | 294 | 1,470 |
+| Validation | 63 | 315 |
+| Testing | 63 | 315 |
+| **Total** | **420** | **2,100** |
+
+- **5 classes:** necrosis, chlorosis, residue, dirt, water
+- **4,200 total images** across all splits
+- **Data split:** 70 / 15 / 15 (train / val / test)
+- **Test accuracy:** 99%
+
+All training images were preprocessed using the RF-DETR cropping and resizing pipeline described above before being used to train the FastViT + MLP classifier.
+
+---
+
+## Notebooks
+
+### RF-DETR Fine-Tuning
+
+RF-DETR was fine-tuned on approximately **200 annotated leaf images**. This detection dataset is also not publicly available — please contact the author to request access.
+
+---
+
+## Notebooks
+
+| Notebook | Description |
+|---|---|
+| `Final_Training_FastViT.ipynb` | Training pipeline for the FastViT + MLP classifier. Operates on pre-cropped images output by RF-DETR. |
+| `rf-detr.ipynb` | Training pipeline for the RF-DETR object detection model. |
+
+---
+
+## Model Weights
+
+The provided classifier weights correspond to the best-performing checkpoint from the 70/15/15 split trial, achieving **99% accuracy** on the held-out test set.
+
+To request the model weights for either the **FastViT + MLP classifier** or the **RF-DETR detector**, please contact the author directly.
