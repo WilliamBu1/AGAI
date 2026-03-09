@@ -70,7 +70,7 @@ RF-DETR was fine-tuned on approximately **200 annotated leaf images**. This dete
 | Notebook | Description |
 |---|---|
 | `Final_Training_FastViT.ipynb` | Training pipeline for the FastViT + MLP classifier. Operates on pre-cropped images output by RF-DETR. |
-| `rf-detr.ipynb` | Training pipeline for the RF-DETR object detection model. |
+| `rf-detr.ipynb` | NOT the training pipeline for the RF-DETR object detection model but just a visual representation of the fine tuned model in action. |
 
 ---
 
